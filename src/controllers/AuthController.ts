@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt'
 import User from '../models/User';
 import State from '../models/State';
+import { generateToken } from '../config/passport';
 
 
 
@@ -28,9 +29,7 @@ export const signIn = async(req:Request,res:Response)=>{
         return;
     }
 
-    const salt = bcrypt.genSaltSync(10)
-    const payload = (Date.now() + Math.random().toString());
-    const token = await bcrypt.hash(payload,salt)
+    const token = generateToken({password:user.hash_password})
 
     user.token = token;
     await user.save();
@@ -79,10 +78,12 @@ export const signUp = async(req:Request,res:Response)=>{
     const salt = bcrypt.genSaltSync(10)
     const passwordHash = bcrypt.hashSync(data.password,salt)
 
-    const payload = (Date.now() + Math.random().toString());
-    const token = await bcrypt.hash(payload,salt)
 
 
+
+    
+    const token = generateToken  ({password:passwordHash}) 
+   
     const newUser = new User ({
         name:data.name,
         email:data.email,
@@ -91,7 +92,8 @@ export const signUp = async(req:Request,res:Response)=>{
         state:data.state
     });
     await newUser.save();
-    res.json({token})
+
+    res.status(201).json({token})
     
 
 }
