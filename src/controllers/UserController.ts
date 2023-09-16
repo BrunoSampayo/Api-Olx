@@ -1,15 +1,17 @@
+import State from "../models/State"
+import { Request,Response } from "express"
 
 
+export const getStates = async (req:Request,res:Response)=>{
+    let states = await State.find();
+    res.json({states})
+}
 
-export const getStates = ()=>{
+export const info =async (req:Request,res:Response)=>{
 
 }
 
-export const info = ()=>{
-
-}
-
-export const editAction = ()=>{
+export const editAction = async (req:Request,res:Response)=>{
 
 }
 
