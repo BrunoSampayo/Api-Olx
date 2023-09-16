@@ -12,7 +12,7 @@ router.get('/ping',(req,res)=>{
 
 router.get('/states',UserController.getStates); //Get all states registered
 
-router.post('/user/signin', AuthController.signIn); //Login method
+router.post('/user/signin', AuthValidator.signIn,AuthController.signIn); //Login method
 router.post('/user/signup', AuthValidator.signUp, AuthController.signUp); //Register method
 
 router.get('/user/me', UserController.info); //Get User info

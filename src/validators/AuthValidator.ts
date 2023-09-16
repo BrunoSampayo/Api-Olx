@@ -1,4 +1,6 @@
-import { checkSchema } from "express-validator";
+import { checkSchema} from "express-validator";
+
+
 
 export const Validator ={
     signUp: checkSchema({
@@ -23,6 +25,20 @@ export const Validator ={
         state:{
             notEmpty:true,
             errorMessage:'Estado não preenchido'
+        }
+        
+    }),
+    signIn:checkSchema({
+        email:{
+            isEmail:true,
+            normalizeEmail:true,
+            errorMessage:'E-mail invalido'
+        },
+        password:{
+            isLength:{
+                options:{min:2}
+            },
+            errorMessage:'Senha precisa ter pelo menos 2 caracteres'
         }
         
     })
