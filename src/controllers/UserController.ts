@@ -4,6 +4,8 @@ import Category from "../models/Category";
 import Ad from "../models/Ad";
 import { Request,Response } from "express"
 import {validationResult,matchedData} from 'express-validator';
+import mongoose from "mongoose";
+import bcrypt from 'bcrypt';
 
 
 
@@ -71,7 +73,23 @@ export const editAction = async (req:Request,res:Response)=>{
         if(emailCheck){
             res.json({error:"E-mail ja existe!"})
         }
-
+    }
+    if(data.state){
+        if(mongoose.Types.ObjectId.isValid(data.state)){
+            const stateCheck  = await State.findById({ state:data.state})
+            if(!stateCheck){
+                res.json({error:"Estado não existe!"});
+                return
+            }
+            updates.state=data.state
+        }else{
+            res.json({error:"Estado inválido!"});
+            return
+        }
+    }
+    if(data.password){
+        const salt = bcrypt.genSaltSync(10)
+        updates.hash_password = await bcrypt.hash(data.password,salt)
     }
 
     if(user){
