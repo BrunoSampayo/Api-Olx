@@ -21,24 +21,28 @@ server.use(passport.initialize());
 
 server.use(router)
 
+//404 error
 server.use((req:Request,res:Response)=>{
     res.status(404)
     res.json({error:'EndPoint nao encontrado'})
 });
 
-const errorHandler:ErrorRequestHandler = (err,req:Request, res:Response) => {
+
+//Case Erro, error handler
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if(err.status){
         res.status(err.status)
     }else{
-        res.status(400);
+        res.status(400)//Bad Request
     }
     if(err.message){
         res.json({error:err.message})
     }else{
-        res.json({error:"Ocorreu algum erro"});
+        res.json({error:"Ocorreu algum erro"})
     }
-    
-    
-}  
+   
+}
 server.use(errorHandler);
+
+
 server.listen(process.env.PORT)

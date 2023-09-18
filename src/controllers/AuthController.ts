@@ -9,14 +9,15 @@ import { generateToken } from '../config/passport';
 
 
 export const signIn = async(req:Request,res:Response)=>{
+    //error verification
     const erros  = validationResult(req)
-    if(!erros.isEmpty){
+    if(!erros.isEmpty()){
         res.json(erros);
         return;
     }
     const {email,password} = matchedData(req);
     
-
+    //get user from email and after compare password
     const user = await User.findOne({email});
     if(!user){
         res.status(401).json({error:'E-mail e/ou senha errados!'});
@@ -33,6 +34,7 @@ export const signIn = async(req:Request,res:Response)=>{
 
     user.token = token;
     await user.save();
+    
     res.status(200).json({token, email});
 
 

@@ -1,6 +1,6 @@
 import { Schema, model, connection, Model } from "mongoose";
 
-type StateType = {
+export type StateType = {
     name:string,
   
 }

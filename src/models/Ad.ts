@@ -5,12 +5,13 @@ type AdType = {
     state:string,
     category:string,
     images:Object[],
-    dataCreated:Date,
+    dateCreated:Date,
     title:String,
     price:number,
     priceNegotiable:boolean,
     description:string,
-    status:string
+    status:string,
+    views:number
 
     
   
@@ -21,12 +22,13 @@ const schema = new Schema<AdType>({
     state:{ type:String, required:true},
     category:{ type:String, required:true},
     images:{ type:[Object], required:true},
-    dataCreated:{ type:Date, required:true},
+    dateCreated:{ type:Date, required:true},
     title:{ type:String, required:true},
     price:{ type:Number, required:true},
     priceNegotiable:{ type:Boolean, required:true},
     description:{ type:String, required:false},
-    status:{ type:String, required:true}
+    status:{ type:String, required:true},
+    views:{ type:Number, required:true}
    
     
 })
