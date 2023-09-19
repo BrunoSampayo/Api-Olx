@@ -7,7 +7,7 @@ export const UserValidator ={
     editAction: checkSchema({
         
         name:{
-           
+           optional:true,
             trim:true,
             isLength:{
                 options:{min:2}

@@ -69,10 +69,12 @@ export const editAction = async (req:Request,res:Response)=>{
     }
 
     if(data.email){
+        
         const emailCheck = await User.findOne({ email:data.email})
         if(emailCheck){
             res.json({error:"E-mail ja existe!"})
         }
+        updates.email = data.email;
     }
     if(data.state){
         if(mongoose.Types.ObjectId.isValid(data.state)){

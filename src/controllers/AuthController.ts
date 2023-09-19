@@ -7,7 +7,7 @@ import State from '../models/State';
 import { generateToken } from '../config/passport';
 
 
-
+///Login method
 export const signIn = async(req:Request,res:Response)=>{
     //error verification
     const erros  = validationResult(req)
@@ -29,8 +29,9 @@ export const signIn = async(req:Request,res:Response)=>{
         res.status(401).json({error:'E-mail e/ou senha errados!'});
         return;
     }
-
-    const token = generateToken({password:user.hash_password})
+    const TokenHash = (email+"$"+password)
+    
+    const token = generateToken({TokenHash});
 
     user.token = token;
     await user.save();
@@ -84,7 +85,8 @@ export const signUp = async(req:Request,res:Response)=>{
 
 
     
-    const token = generateToken  ({password:passwordHash}) 
+    const TokenHash = (data.email+"$"+data.password)
+    const token = generateToken({TokenHash}); 
    
     const newUser = new User ({
         name:data.name,

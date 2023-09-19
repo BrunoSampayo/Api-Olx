@@ -5,6 +5,7 @@ import {Strategy as JWTStrategy, ExtractJwt, StrategyOptions} from 'passport-jwt
 import { Response, Request,NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 
+
 import User, { UserType } from "../models/User";
 
 dotenv.config();
@@ -18,7 +19,13 @@ const options:StrategyOptions ={
 
 //payload receive 
 passport.use(new JWTStrategy(options,async (payload,done) => {
-    const user = await User.findOne({hash_password:payload.password});
+     console.log(payload.TokenHash)
+     let data = payload.TokenHash.split('$')
+     
+    const user = await User.findOne({email:data[0]})
+    
+  
+    
     if(user){
         return done(null,user);
     }
