@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import {Strategy as JWTStrategy, ExtractJwt, StrategyOptions} from 'passport-jwt';
 import { Response, Request,NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
+import CryptoJS from 'crypto-js';
+
 
 
 import User, { UserType } from "../models/User";
@@ -19,12 +21,16 @@ const options:StrategyOptions ={
 
 //payload receive 
 passport.use(new JWTStrategy(options,async (payload,done) => {
-     console.log(payload.TokenHash)
-     let data = payload.TokenHash.split('$')
+    let DataPayload = payload.TokenHash
+    try {
+        DataPayload = CryptoJS.AES.decrypt(payload.TokenHash, process.env.CRYPTO_SECRET as string).toString(CryptoJS.enc.Utf8);
+        console.log({ DataPayload });
+      } catch (error) {
+        console.error('Erro ao descriptografar:', error);
+      }
+     let data = DataPayload.split('$')
      
     const user = await User.findOne({email:data[0]})
-    
-  
     
     if(user){
         return done(null,user);

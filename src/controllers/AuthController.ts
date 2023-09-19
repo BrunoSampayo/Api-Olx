@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import User from '../models/User';
 import State from '../models/State';
 import { generateToken } from '../config/passport';
+import CryptoJS from 'crypto-js';
 
 
 ///Login method
@@ -29,7 +30,8 @@ export const signIn = async(req:Request,res:Response)=>{
         res.status(401).json({error:'E-mail e/ou senha errados!'});
         return;
     }
-    const TokenHash = (email+"$"+password)
+    const TokenData = (email+"$"+password)
+    const TokenHash = CryptoJS.AES.encrypt(TokenData,process.env.CRYPTO_SECRET as string).toString()
     
     const token = generateToken({TokenHash});
 
@@ -79,13 +81,12 @@ export const signUp = async(req:Request,res:Response)=>{
         return
     }
     const salt = bcrypt.genSaltSync(10)
+    
     const passwordHash = bcrypt.hashSync(data.password,salt)
 
 
-
-
-    
-    const TokenHash = (data.email+"$"+data.password)
+    const TokenData = (data.email+"$"+data.password)
+    const TokenHash = CryptoJS.AES.encrypt(TokenData,process.env.CRYPTO_SECRET as string).toString()
     const token = generateToken({TokenHash}); 
    
     const newUser = new User ({
