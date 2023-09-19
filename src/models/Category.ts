@@ -1,6 +1,6 @@
 import { Schema, model, connection, Model } from "mongoose";
 
-type CategoryType = {
+export type CategoryType = {
     name:string,
     slug:string
   
