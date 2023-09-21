@@ -10,7 +10,7 @@ type AdType = {
     price:number,
     priceNegotiable:boolean,
     description:string,
-    status:string,
+    status:boolean,
     views:number
 
     
@@ -27,7 +27,7 @@ const schema = new Schema<AdType>({
     price:{ type:Number, required:true},
     priceNegotiable:{ type:Boolean, required:true},
     description:{ type:String, required:false},
-    status:{ type:String, required:true},
+    status:{ type:Boolean, required:true},
     views:{ type:Number, required:true}
    
     

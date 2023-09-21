@@ -11,6 +11,7 @@ import bcrypt from 'bcrypt';
 
 export const getStates = async (req:Request,res:Response)=>{
     let states = await State.find();
+    
     res.json({states})
 }
 

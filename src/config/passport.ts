@@ -24,7 +24,7 @@ passport.use(new JWTStrategy(options,async (payload,done) => {
     let DataPayload = payload.TokenHash
     try {
         DataPayload = CryptoJS.AES.decrypt(payload.TokenHash, process.env.CRYPTO_SECRET as string).toString(CryptoJS.enc.Utf8);
-        console.log({ DataPayload });
+        
       } catch (error) {
         console.error('Erro ao descriptografar:', error);
       }
