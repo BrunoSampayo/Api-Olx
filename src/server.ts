@@ -6,6 +6,7 @@ import { mongoConnect } from './database/mongo';
 import router from './routes/api';
 import passport from 'passport';
 
+
 dotenv.config();
 
 mongoConnect()
@@ -40,6 +41,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     }else{
         res.json({error:"Ocorreu algum erro"})
     }
+    
    
 }
 server.use(errorHandler);

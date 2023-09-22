@@ -8,13 +8,13 @@ import * as AuthController from '../controllers/AuthController';
 import * as UserController from '../controllers/UserController';
 import * as AdsController from '../controllers/AdsController';
 
+import uploadConfig from "../config/multer";
 import { privateRoute } from "../config/passport";
+
 
 const router = Router();
 
-router.get('/ping',(req,res)=>{
-    res.json({pong:true})
-});
+router.get('/ping',(req,res)=>{res.json({pong:true})});
 
 router.get('/states',UserController.getStates); //Get all states registered
 
@@ -26,7 +26,8 @@ router.put('/user/me', UserValidator.editAction,privateRoute, UserController.edi
 
 router.get('/categories', AdsController.getCategories); //Get all categories from ads
 
-router.post('/ad/add', AdsController.addAction); //Add an ad
+
+router.post('/ad/add',privateRoute,uploadConfig.array('adImage',5), AdsController.addAction); //Add an ad
 router.get('ad/list', AdsController.getList); // Get a list ads
 router.get('/ad/item',AdsController.getItem); // Get a single ad
 router.post('/ad/:id', AdsController.editAction); //Edit an ad
