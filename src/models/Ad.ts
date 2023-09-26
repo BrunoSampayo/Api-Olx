@@ -1,10 +1,16 @@
 import { Schema, model, connection, Model } from "mongoose";
 
-type AdType = {
+type image ={
+    url: string ,
+    default: boolean
+}
+
+export type AdType = {
+    _id: any;
     idUser:string,
     state:string,
     category:string,
-    images:Object[],
+    images:image[],
     dateCreated:Date,
     title:String,
     price:number,

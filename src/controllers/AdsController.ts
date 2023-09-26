@@ -1,7 +1,7 @@
 import {unlink} from 'fs/promises'
 import { Request, Response } from "express";
 import Category from "../models/Category"
-import Ad from "../models/Ad";
+import Ad, { AdType } from "../models/Ad";
 import { UserType } from "../models/User";
 import sharp from "sharp";
 
@@ -32,11 +32,11 @@ export const getCategories = async(req:Request,res:Response)=>{
            
             await sharp(file.path).resize(500).toFormat('jpeg').toFile(`./public/media/${file.filename}.jpg`);
             await unlink(file.path)
-            filesPath.push(file.filename);
+            filesPath.push(file.filename+'.jpg');
             
         }
         
-        return filesPath
+        return filesPath+'.jpg'
         
     }else{
         new Error("Upload file error")
@@ -79,8 +79,8 @@ export const addAction = async(req:Request,res:Response) =>{
                      
                 }
             }else{
-                
-                newAd.images.push({url,default:false})
+                //One file Upload
+                newAd.images.push({url:url[0],default:true})
             } 
        }
     }
@@ -91,14 +91,39 @@ export const addAction = async(req:Request,res:Response) =>{
 
 }
 
-export const getList = async()=>{
+export const getList = async(req:Request,res:Response)=>{
+   let {sort='asc',offset=0,limit=8,q,cat,state} =  req.query;
+
+   const adsData:AdType[] = await Ad.find({status:true}).exec();
+   let ads = [];
+   for(let i in adsData) {
+        let image;
+
+        let defaulImage = adsData[i].images.find(image => image.default);
+        if(defaulImage){
+            image = `${process.env.BASE}/media/${defaulImage.url}`;
+        }else{
+            image = `${process.env.BASE}/media/default.jpg`;
+        }
+
+
+
+        ads.push({
+            id:adsData[i]._id,
+            title:adsData[i].title,
+            price:adsData[i].price,
+            priceNegotiable:adsData[i].priceNegotiable,
+            image
+            
+        });
+    }
+    res.json({ads})
+}
+
+export const getItem = async(req:Request,res:Response)=>{
 
 }
 
-export const getItem = async()=>{
-
-}
-
-export const editAction = async()=>{
+export const editAction = async(req:Request,res:Response)=>{
     
 }
