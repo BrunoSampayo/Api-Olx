@@ -4,6 +4,7 @@ import Category from "../models/Category"
 import Ad, { AdType } from "../models/Ad";
 import { UserType } from "../models/User";
 import sharp from "sharp";
+import State from '../models/State';
 
 
 export const getCategories = async(req:Request,res:Response)=>{
@@ -93,8 +94,34 @@ export const addAction = async(req:Request,res:Response) =>{
 
 export const getList = async(req:Request,res:Response)=>{
    let {sort='asc',offset=0,limit=8,q,cat,state} =  req.query;
+   let filters:any = {status:true};
+   let total = 0;
 
-   const adsData:AdType[] = await Ad.find({status:true}).exec();
+   if(q){
+       filters.title = new RegExp(q as string,'i');
+    }
+
+   if(cat){
+        const c = await Category.findOne({slug:cat}).exec();
+        if(c){
+            filters.category = c._id.toString();
+        }
+    }
+    if(state){
+        let _state = state as string
+        const s = await State.findOne({name:_state.toUpperCase()}).exec();
+        if(s){
+            filters.state = s._id.toString();
+        }
+    }
+   
+    const adsTotal = await Ad.find(filters).exec();
+    total = adsTotal.length
+   const adsData:AdType[] = await Ad.find(filters)
+   .sort({dateCreated:(sort==='desc'?-1:1)})
+   .skip(parseInt(offset as string))
+   .limit(parseInt(limit as string))
+   .exec();
    let ads = [];
    for(let i in adsData) {
         let image;
@@ -117,7 +144,7 @@ export const getList = async(req:Request,res:Response)=>{
             
         });
     }
-    res.json({ads})
+    res.json({ads, total})
 }
 
 export const getItem = async(req:Request,res:Response)=>{
