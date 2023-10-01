@@ -103,9 +103,11 @@ Assim projeto ira rodar em modo desenolvimento e qualquer alteração feita nos 
 
 
 
-## 🎈 Usage <a name="usage"></a>
+## 🎈 Usando Projeto <a name="usage"></a>
 
 Para as rotas é uso estou disponibilanzdo o arquivo Postman, nele estara todas rotas e os dados que podem ser enviados, as rotas privadas é necessario envio do JWT porem apos realizar cadastro e loguin do usuario ja sera gerado um token para ele é possivel preencher nas variaveis predefinidas no Postman.
+https://api.postman.com/collections/29516202-a5cd6f45-fede-461b-aa64-90e851d232e2?access_key=PMAT-01HBP81A104RHPQEBX4D7H6M32
+com este link é possivel voce importar os dados no seu postman assim possibilitando utilizar o projeto com mais eficiencia
 
 
 ## ⛏️ Contrução usando <a name = "built_using"></a>
