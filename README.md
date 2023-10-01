@@ -16,9 +16,9 @@
 
 ---
 
-<p align="center"> Projeto criado para fins de estudo e pratica de backend e interação com banco de dados, e construção de api rest.
+<h3 align="center"> Projeto criado para fins de estudo e pratica de backend e interação com banco de dados, e construção de api rest.
     <br> 
-</p>
+</h3>
 
 
 
@@ -61,73 +61,67 @@ Aqui é oque voce ira precisar para rodar o projeto em seu local de desenvolvime
 
 
 
+Apos instalação do nodeJs e Mongo db é necessario relizar as seguintes instalaçõs para evitar possiveis erros dependendo do modo de execução do projeto.
 
 ```
 npm install -g typescript
 npm install -g ts-node
+npm install -g nodemon
 ```
+
 
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+Apos instalção das dependencias, estando dentro da pasta do projeto é necessario criar um arquivo preencher o arquivo .env que estára vazio com seguites dados:
+- PORT=5000
+- BASE=http://localhost:5000
+- MONGO_URL= url para coneção do seu banco de dados MongoDb
+- CRYPTO_SECRET= sequencial usado para cripgrafar os dados da escolha do usuario
+- JWT_SECRET= sequencial usado para validação do jwt 
 
-Say what the step will be
+Apos configurtação do .env podemos rodad seguinte comando. 
+```
+npm install 
+```
+Para nodejs ler todas dependencias que precisa e realizar o download
+
+Apos instalação das repencias
 
 ```
-Give the example
+npm build
+npm run start
 ```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo.
-
-## 🔧 Running the tests <a name = "tests"></a>
-
-Explain how to run the automated tests for this system.
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+para dar build no projeto e transformar o ts em js e executar o servidor,
+ ou se quiser rodar projeto em modo desenvolvimento execute.
 
 ```
-Give an example
+npm run start-dev
 ```
+Assim projeto ira rodar em modo desenolvimento e qualquer alteração feita nos arquivos terá mudança imedianta no servidor.
 
-### And coding style tests
 
-Explain what these tests test and why
 
-```
-Give an example
-```
 
 ## 🎈 Usage <a name="usage"></a>
 
-Add notes about how to use the system.
+Para as rotas é uso estou disponibilanzdo o arquivo Postman, nele estara todas rotas e os dados que podem ser enviados, as rotas privadas é necessario envio do JWT porem apos realizar cadastro e loguin do usuario ja sera gerado um token para ele é possivel preencher nas variaveis predefinidas no Postman.
 
-## 🚀 Deployment <a name = "deployment"></a>
 
-Add additional notes about how to deploy this on a live system.
-
-## ⛏️ Built Using <a name = "built_using"></a>
+## ⛏️ Contrução usando <a name = "built_using"></a>
 
 - [MongoDB](https://www.mongodb.com/) - Database
 - [Express](https://expressjs.com/) - Server Framework
 - [NodeJs](https://nodejs.org/en/) - Server Environment
 
-## ✍️ Authors <a name = "authors"></a>
 
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
 
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
 
-## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
+## 🎉 Agradecimentos <a name = "acknowledgement"></a>
+
+- Agradeço imensamente a B7Web pelos conhecimentos passados e pela ideia do projeto, espero dentro de alguns dias estar postando projeto que esta em desenvolvimento de minha autoria.
+Nada seria possivel sem grandes horas de estudos e e pelos conhecimentos obtidos no curso, obrigado por tudo e nos vemos em breve.
+
+Qualquer duvida ou para contato pode falar comigo pelo email: brunosampayo1040@gmail.com <br/>
+
