@@ -9,6 +9,7 @@ export const mongoConnect = async ()=>{
         console.log('Conectando ao MongoDB')
         await connect(process.env.MONGO_URL as string);
         console.log("MongoDB conectado com sucesso");
+        console.log(`Servidor rodando em ${process.env.BASE}`)
 
     }catch(error){
         console.log("Erro conexão MongoDB",error)

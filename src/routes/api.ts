@@ -30,6 +30,6 @@ router.get('/categories', AdsController.getCategories); //Get all categories fro
 router.post('/ad/add',privateRoute,uploadConfig.array('adImage',5), AdsController.addAction); //Add an ad
 router.get('/ad/list', AdsController.getList); // Get a list ads
 router.get('/ad/item',AdsController.getItem); // Get a single ad
-router.post('/ad/:id', AdsController.editAction); //Edit an ad
+router.post('/ad/:id', privateRoute,uploadConfig.array('adImage',5),AdsController.editAction); //Edit an ad
 
 export default router;

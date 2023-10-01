@@ -1,11 +1,13 @@
+
 import {unlink} from 'fs/promises'
 import { Request, Response } from "express";
 import Category from "../models/Category"
 import Ad, { AdType } from "../models/Ad";
-import { UserType } from "../models/User";
+import User, { UserType } from "../models/User";
 import sharp from "sharp";
-import State from '../models/State';
-
+import State, { StateType } from '../models/State';
+import { isValidObjectId } from 'mongoose';
+import { Console } from 'console';
 
 export const getCategories = async(req:Request,res:Response)=>{
     const cats = await Category.find().lean();
@@ -26,7 +28,7 @@ export const getCategories = async(req:Request,res:Response)=>{
  const uploadFile = async (file: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[]; } | undefined)=>{
     if(file){
         const files= file as Express.Multer.File[]
-        console.log(files)
+        
         let filesPath =[]
         for(let i in files) {
             const file = files[i] ;
@@ -37,7 +39,7 @@ export const getCategories = async(req:Request,res:Response)=>{
             
         }
         
-        return filesPath+'.jpg'
+        return filesPath
         
     }else{
         new Error("Upload file error")
@@ -148,9 +150,151 @@ export const getList = async(req:Request,res:Response)=>{
 }
 
 export const getItem = async(req:Request,res:Response)=>{
+    let {id, other=null} = req.query;
 
+    if(!id){
+        res.json({error:'Sem produto'});
+        return;
+    }
+    if(isValidObjectId(id)){
+            const ad = await Ad.findById(id);
+        if(!ad){
+            res.json({error:'Produto não encontrado'});
+            return;
+        }
+        ad.views++;
+        await ad.save();
+
+        let images = [];
+        for (let i in ad.images){
+            images.push(`${process.env.BASE}/media/${ad.images[i].url}`);
+        }
+
+        let category = await Category.findById(ad.category).exec();
+        let userInfo = await User.findById(ad.idUser) as UserType;
+        let stateInfo = await State.findById(ad.state).exec() as StateType;
+
+        let others=[];
+        if(other){  
+            const otherData = await Ad.find({status:true, idUser:ad.idUser}).exec()
+            for(let i in otherData) {
+                if(otherData[i]._id.toString() != ad._id.toString()) {
+                    let image = `${process.env.BASE}/media/default.jpg`;
+
+                    let defaultImage = otherData[i].images.find(e=>e.default);
+                    if(defaultImage){
+                        image = `${process.env.BASE}/media/${defaultImage.url}`;
+                    }
+                    others.push({
+                        id:otherData[i]._id,
+                        title:otherData[i].title,
+                        price:otherData[i].price,
+                        priceNegotiable:otherData[i].priceNegotiable,
+                        image
+                    })
+                }
+            }
+        }
+        res.json({
+            id:ad._id,
+            title:ad.title,
+            price:ad.price,
+            priceNegotiable:ad.priceNegotiable,
+            description:ad.description,
+            dateCreated:ad.dateCreated,
+            views:ad.views,
+            image:images,
+            category,
+            userInfo:{
+                name:userInfo.name,
+                email:userInfo.email,
+                
+            },
+            stateName:stateInfo.name,
+            others
+
+            
+        })
+    }else{
+        res.json({error:'Id inválido'});
+        return
+    }
 }
 
 export const editAction = async(req:Request,res:Response)=>{
+    const user = req.user as UserType;
     
+    let {id} =req.params;
+    console.log(id)
+    let {title,status,price,priceneg,desc,cat}= req.body;
+    if(!isValidObjectId(id)){
+        res.json({error:'Id inválido'});
+        return;
+    }
+
+    const ad = await Ad.findById(id).exec();
+
+    if(!ad){
+        res.json({error:'Anúncio inexistente'})
+        return;
+    }
+    if(user._id.toString() !==ad.idUser){
+        res.json({error:"Anuncio nao pertence a este usuario"})
+        return
+    }
+
+    let updates:Partial<AdType> ={};
+
+    if(title){
+        updates.title= title
+    }
+    if(price){
+        price = price.replace('.','').replace(',','.').replace('R$','');
+        price=parseFloat(price)
+        updates.price=price;
+    }
+    if(priceneg){
+        updates.priceNegotiable=priceneg;
+    }
+    if(status){
+        updates.status=status;
+    }
+    if(desc){
+        updates.description=desc;
+    }
+    if(cat){
+        const category = await Category.findOne({slug:cat}).exec();
+        if(!category){
+            res.json({error:"Categoria inexistente"});
+            return;
+        }
+        updates.category = category._id.toString();
+    }
+
+    
+
+    if(req.files as  Express.Multer.File[] ){
+        updates.images=ad.images
+        
+        let url= await  uploadFile(req.files)
+        console.log(url)
+        if(url){
+                if(url.length > 1){
+                    for(let i = 0; i < url.length; i++){
+                       updates.images.push({url:url[i],default:false})
+                       
+                        
+                    }
+                }else{
+                   // One file Upload
+                    updates.images.push({url:url[0],default:false})
+                } 
+        }
+    }
+    
+    
+    await Ad.findByIdAndUpdate(id,{$set: updates})
+
+    res.json({error:''})
+
 }
